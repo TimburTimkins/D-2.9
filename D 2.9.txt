@@ -1,0 +1,54 @@
+>>> from news.models import *
+>>> c1 = User.objects.create_user(username='User1')
+>>> c2 = User.objects.create_user(username='User2')
+>>> Author.objects.create(authorUser=c1)
+<Author: Author object (1)>
+>>> Author.objects.create(authorUser=c2)
+<Author: Author object (2)>
+>>> Category.objects.create(name='IT')
+<Category: Category object (1)>
+>>> Category.objects.create(name='Sport')
+<Category: Category object (2)>
+>>> Category.objects.create(name='Game')
+<Category: Category object (3)>
+>>> Category.objects.create(name='Economy')
+<Category: Category object (4)>
+>>> author = Author.objects.get(id=1) 
+>>> Post.objects.create(author=author, categoryType='NW', title='League Champions', text='Mancester City Winner')
+<Post: Post object (1)>
+>>> Post.objects.get(id=1).title
+'League Champions'
+>>> Post.objects.create(author=author, categoryType='AR', title='Tennis', text='Чемпион US Open 2021, третья ракетка мира, российский теннисист Даниил Медведев рассказал, волновался ли, как примет его публика на Уимблдоне-2023. Напомним, в матче первого круга Медведев со счетом 7:5, 6:4, 6:3 обыграл 391-ю ракетку мира, 20-летнего британца Артура Фери.')
+<Post: Post object (2)>
+>>> author1 = Author.objects.get(id=2)
+>>> Post.objects.create(author=author1, categoryType='AR', title='Elden Ring', text='Куплинов проходил популярную игру Elden Ring, вышедшую в далеком 2021 году, так долго, что его подписчикам она надоела, они забыли о ее существовании и наконец наткнулись на спидран прохождение от неизвестного ноунейма. Однако Куплинов все так же прекрасен.')
+<Post: Post object (3)>
+>>> Post.objects.get(id=1).postCategory.add(Category.objects.get(id=2))
+>>> Post.objects.get(id=2).postCategory.add(Category.objects.get(id=2))
+>>> Post.objects.get(id=3).postCategory.add(Category.objects.get(id=3))
+>>> Comment.objects.create(commentPost=Post.objects.get(id=1), commentUser=Author.objects.get(id=1).authorUser, text='Манчестер Сити Чемпион, но Интер бился более чем достойно. Мы это заслужили.')
+<Comment: Comment object (1)>
+>>> Post.objects.get(id=1).postCategory.add(Category.objects.get(id=3))
+>>> Comment.objects.create(commentPost=Post.objects.get(id=1), commentUser=Author.objects.get(id=2).authorUser, text='Денежный мешок, все куплено! Интер играл лучше!')
+<Comment: Comment object (2)>
+>>> Comment.objects.create(commentPost=Post.objects.get(id=2), commentUser=Author.objects.get(id=1).authorUser, text='Хорошо, что теннис вне политики)')
+<Comment: Comment object (3)>
+>>> Comment.objects.create(commentPost=Post.objects.get(id=3), commentUser=Author.objects.get(id=2).authorUser, text='Дима, пропустил лут на 19:27 и поворот к секретному босу')
+<Comment: Comment object (4)>
+>>> Comment.objects.create(commentPost=Post.objects.get(id=2), commentUser=Author.objects.get(id=1).authorUser, text='Когда же он станет первой ракеткой мира?!')
+<Comment: Comment object (5)>
+>>> Comment.objects.get(id=1).like()
+>>> Comment.objects.get(id=2).dislike()
+>>> Comment.objects.get(id=2).dislike()
+>>> Post.objects.get(id=2).like()
+>>> Post.objects.get(id=1).like()
+>>> a = Post.objects.order_by('-rating')[:1]
+>>> b = Comment.objects.filter(commentPost=a).values('text')
+>>> for i in a:
+...     i.dateCreation
+...     i.author
+...     i.rating
+...     i.title
+...     i.preview()
+...     b
+...     
